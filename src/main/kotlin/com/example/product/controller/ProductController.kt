@@ -27,4 +27,15 @@ class ProductController(private val productRepository: ProductRepository) {
         val newProduct = Product(name = request.name)
         return ResponseEntity.ok<Any>(productRepository.save(newProduct))
     }
+
+    @DeleteMapping("/{id}")
+    fun deleteProduct(@PathVariable id: Long): ResponseEntity<Any> {
+        if(!productRepository.existsById(id)) {
+            return ResponseEntity.notFound()
+                .header("message", "Product not found")
+                .build()
+        }
+        productRepository.deleteById(id)
+        return ResponseEntity.noContent().build()
+    }
 }
